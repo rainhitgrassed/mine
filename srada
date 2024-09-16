@@ -589,7 +589,7 @@ function OrionLib:MakeWindow(WindowConfig)
 	}), "Second")
 
 	local imageLabel = Instance.new("ImageLabel")
-		imageLabel.Parent = screenGui
+		imageLabel.Parent = Orion,
 		imageLabel.Size = UDim2.new(0, 200, 0, 200)  -- Size of the ImageLabel (200x200 pixels)
 		imageLabel.Position = UDim2.new(0, 25, 0, -24)  -- Center the ImageLabel on the screen
 		imageLabel.Image = "rbxassetid://4483362458"  -- Set the image using the image ID
