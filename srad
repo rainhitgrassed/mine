@@ -588,6 +588,14 @@ function OrionLib:MakeWindow(WindowConfig)
 		}),
 	}), "Second")
 
+	local imageLabel = Instance.new("ImageLabel")
+		imageLabel.Parent = screenGui
+		imageLabel.Size = UDim2.new(0, 200, 0, 200)  -- Size of the ImageLabel (200x200 pixels)
+		imageLabel.Position = UDim2.new(0, 25, 0, -24)  -- Center the ImageLabel on the screen
+		imageLabel.Image = "rbxassetid://4483362458"  -- Set the image using the image ID
+		imageLabel.BackgroundTransparency = 1  -- Make the background transparent
+		imageLabel.BorderSizePixel = 0  -- Remove border
+
 	local WindowName = AddThemeObject(SetProps(MakeElement("Label", WindowConfig.Name, 14), {
 		Size = UDim2.new(1, -30, 2, 0),
 		Position = UDim2.new(0, 25, 0, -24),
