@@ -613,16 +613,6 @@ function OrionLib:MakeWindow(WindowConfig)
 		--	ImageColor3 = Color3.fromRGB(33, 33, 33),
 		--	ImageTransparency = 0.7
 		--}),
-		local ImageLabel = Instance.new("ImageLabel")
-		ImageLabel.Parent = MainWindow.TopBar
-		ImageLabel.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
-		ImageLabel.BackgroundTransparency = 1.000
-		ImageLabel.BorderColor3 = Color3.fromRGB(0, 0, 0)
-		ImageLabel.BorderSizePixel = 0
-		ImageLabel.Position = UDim2.new(0.462536037, 0, 0.249401927, 0)
-		ImageLabel.Size = UDim2.new(0, 100, 0, 100)
-		ImageLabel.Image = "rbxassetid://4483362458"
-
 		SetChildren(SetProps(MakeElement("TFrame"), {
 			Size = UDim2.new(1, 0, 0, 50),
 			Name = "TopBar"
