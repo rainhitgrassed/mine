@@ -10,7 +10,7 @@ local OrionLib = loadstring(game:HttpGet(('https://raw.githubusercontent.com/rai
 
 ## Creating a Window
 ```lua
-local Window = OrionLib:MakeWindow({Name = "Lightning.cc", HidePremium = false, SaveConfig = true, ConfigFolder = "OrionTest"})
+local Window = OrionLib:MakeWindow({Name = "name", HidePremium = false, SaveConfig = true, ConfigFolder = "OrionTest"})
 
 ```
 
