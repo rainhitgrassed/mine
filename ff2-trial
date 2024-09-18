@@ -1,0 +1,216 @@
+local OrionLib = loadstring(game:HttpGet(('https://raw.githubusercontent.com/rainhitgrassed/mine/main/Source')))()
+local Window = OrionLib:MakeWindow({Name = "Lightning.cc Trial", HidePremium = false, SaveConfig = true, ConfigFolder = "OrionTest"})
+
+local tab1 = Window:MakeTab({
+	Name = "Catching",
+	Icon = "rbxassetid://4483362458",
+	PremiumOnly = false
+})
+
+local tab2 = Window:MakeTab({
+	Name = "Players",
+	Icon = "rbxassetid://4483362458",
+	PremiumOnly = false
+})
+
+local sec1 = tab1:AddSection({
+	Name = "Catching Settings"
+})
+
+local function GetClosestFootball()
+	local player = game.Players.LocalPlayer
+	local character = player.Character
+	local closestFootball = nil
+	local shortestDistance = math.huge
+	
+	for _, part in ipairs(workspace:GetChildren()) do
+		if part:IsA("Part") and part.Name == "Football" then
+			local distance = (character.HumanoidRootPart.Position - part.Position).magnitude
+			if distance < shortestDistance then
+				shortestDistance = distance
+				closestFootball = part
+			end
+		end
+	end
+	
+	return closestFootball
+end
+
+local hitbox = Instance.new("Part")
+hitbox.Size = Vector3.new(0, 0, 0)
+hitbox.Anchored = true
+hitbox.CanCollide = false
+hitbox.Transparency = 1 -- Fully transparent initially
+hitbox.Color = Color3.fromRGB(128, 128, 128) -- Gray color
+hitbox.Parent = workspace
+
+tab1:AddToggle({
+	Name = "Show Hitbox",
+	Default = false,
+	Callback = function(Value)
+		if Value then
+			hitbox.Transparency = 0.5 -- Semi-transparent when toggle is ON
+		else
+			hitbox.Transparency = 1 -- Fully transparent when toggle is OFF
+		end
+	end    
+})
+
+game:GetService("RunService").Stepped:Connect(function()
+	local closestFootball = GetClosestFootball()
+	if closestFootball then
+		hitbox.Position = closestFootball.Position
+	end
+end)
+
+
+local hitboxSize = 0 -- To change the football size
+local isMagnetActive = false -- To check if the magnet toggle is active
+
+local function resizePart(part)
+    if part:IsA("BasePart") and (part.Name == "Football" or part.Name == "FootballBasePart") then
+        if isMagnetActive then
+            part.Size = Vector3.new(hitboxSize, hitboxSize, hitboxSize)
+        end
+    end
+end
+
+Workspace.ChildAdded:Connect(function(child)
+    resizePart(child)
+end)
+
+for _, child in pairs(Workspace:GetChildren()) do
+    resizePart(child)
+end
+
+tab1:AddToggle({
+    Name = "Customize Magnets",
+    Default = false,
+    Callback = function(Value)
+        isMagnetActive = Value
+        print("Magnet Toggle:", Value)
+    end    
+})
+
+tab1:AddSlider({
+    Name = "Magnet Radius",
+    Min = 0,
+    Max = 25,
+    Default = 0,
+    Color = Color3.fromRGB(109,22,197),
+    Increment = 1,
+    ValueName = "Magnet Radius",
+    Callback = function(Value)
+		hitbox.Size = Vector3.new(Value, Value, Value)
+        hitboxSize = Value
+        print("Magnet Radius:", Value)
+        
+        for _, child in pairs(Workspace:GetChildren()) do
+            if child:IsA("BasePart") and (child.Name == "Football" or child.Name == "FootballBasePart") then
+                resizePart(child)
+            end
+        end
+    end    
+})
+
+
+local sec2 = tab2:AddSection({
+	Name = "Player Settings"
+})
+
+local walkSpeedValue = 20
+local jumpPowerValue = 50
+
+local function updatePlayerStats()
+	local player = game.Players.LocalPlayer
+	if player and player.Character and player.Character:FindFirstChildOfClass("Humanoid") then
+		local humanoid = player.Character:FindFirstChildOfClass("Humanoid")
+		humanoid.WalkSpeed = walkSpeedValue
+		humanoid.JumpPower = jumpPowerValue
+	end
+end
+
+tab2:AddSlider({
+	Name = "Walkspeed",
+	Min = 20,
+	Max = 23,
+	Default = 20,
+	Color = Color3.fromRGB(109,22,197),
+	Increment = 0.1,
+	ValueName = "WS",
+	Callback = function(Value)
+		walkSpeedValue = Value
+		updatePlayerStats()
+	end    
+})
+
+tab2:AddSlider({
+	Name = "Jumppower",
+	Min = 50,
+	Max = 55,
+	Default = 50,
+	Color = Color3.fromRGB(109,22,197),
+	Increment = 0.1,
+	ValueName = "JP",
+	Callback = function(Value)
+		jumpPowerValue = Value
+		updatePlayerStats()
+	end    
+})
+
+game.Players.LocalPlayer.CharacterAdded:Connect(function(character)
+	local humanoid = character:WaitForChild("Humanoid")
+	
+	humanoid:GetPropertyChangedSignal("WalkSpeed"):Connect(updatePlayerStats)
+	humanoid:GetPropertyChangedSignal("JumpPower"):Connect(updatePlayerStats)
+	
+	updatePlayerStats()
+end)
+
+local UserInputService = game:GetService("UserInputService")
+local Players = game:GetService("Players")
+local player = Players.LocalPlayer
+local character = player.Character or player.CharacterAdded:Wait()
+local humanoid = character:WaitForChild("Humanoid")
+
+local originalJumpPower = humanoid.JumpPower
+local temporaryJumpPower = 55
+local resetDelay = 0.1 -- Time in seconds before resetting the jump power
+local angleEnchantmentEnabled = false
+
+tab2:AddToggle({
+    Name = "Angle Enchantment",
+    Default = false,
+    Callback = function(Value)
+        angleEnchantmentEnabled = Value
+        print("Angle Enchantment:", Value)
+    end    
+})
+
+tab2:AddSlider({
+    Name = "Angle JP",
+    Min = 55,
+    Max = 59,
+    Default = 55,
+    Color = Color3.fromRGB(109,22,197),
+    Increment = 0.1,
+    ValueName = "JP",
+    Callback = function(Value)
+        temporaryJumpPower = Value
+        print("Angle JP:", Value)
+    end    
+})
+
+local function onKeyPress(input, gameProcessedEvent)
+    if gameProcessedEvent then return end
+    
+    if input.KeyCode == Enum.KeyCode.Space and UserInputService:IsKeyDown(Enum.KeyCode.LeftShift) then
+        if angleEnchantmentEnabled then
+            humanoid.JumpPower = temporaryJumpPower
+            wait(resetDelay)
+            humanoid.JumpPower = originalJumpPower
+        end
+    end
+end
+
+UserInputService.InputBegan:Connect(onKeyPress)
