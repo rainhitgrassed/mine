@@ -71,27 +71,6 @@ local function GetClosestFootball()
 	return closestFootball
 end
 
-tab1:AddSlider({
-    Name = "Magnet Radius",
-    Min = 0,
-    Max = 25,
-    Default = 0,
-    Color = Color3.fromRGB(109,22,197),
-    Increment = 1,
-    ValueName = "Magnet Radius",
-    Callback = function(Value)
-		hitbox.Size = Vector3.new(Value, Value, Value)
-        hitboxSize = Value
-        print("Magnet Radius:", Value)
-        
-        for _, child in pairs(Workspace:GetChildren()) do
-            if child:IsA("BasePart") and (child.Name == "Football" or child.Name == "FootballBasePart") then
-                resizePart(child)
-            end
-        end
-    end    
-})
-
 local hitbox = Instance.new("Part")
 hitbox.Size = Vector3.new(0, 0, 0)
 hitbox.Anchored = true
@@ -118,6 +97,27 @@ game:GetService("RunService").Stepped:Connect(function()
 		hitbox.Position = closestFootball.Position
 	end
 end)
+
+tab1:AddSlider({
+    Name = "Magnet Radius",
+    Min = 0,
+    Max = 25,
+    Default = 0,
+    Color = Color3.fromRGB(109,22,197),
+    Increment = 1,
+    ValueName = "Magnet Radius",
+    Callback = function(Value)
+		hitbox.Size = Vector3.new(Value, Value, Value)
+        hitboxSize = Value
+        print("Magnet Radius:", Value)
+        
+        for _, child in pairs(Workspace:GetChildren()) do
+            if child:IsA("BasePart") and (child.Name == "Football" or child.Name == "FootballBasePart") then
+                resizePart(child)
+            end
+        end
+    end    
+})
 
 local sec2 = tab2:AddSection({
 	Name = "Player Settings"
