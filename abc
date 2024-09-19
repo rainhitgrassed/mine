@@ -542,7 +542,7 @@ function OrionLib:MakeWindow(WindowConfig)
 			Position = UDim2.new(1, -10, 0, 0)
 		}), "Second"), 
 		AddThemeObject(SetProps(MakeElement("Frame"), {
-			Size = UDim2.new(0, 1, 1, 0),
+			Size = UDim2.new(0, 1, 0.83, 0),
 			Position = UDim2.new(1, -1, 0, 0)
 		}), "Stroke"), 
 		TabHolder,
