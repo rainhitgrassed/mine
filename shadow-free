@@ -1,5 +1,5 @@
 local OrionLib = loadstring(game:HttpGet(('https://raw.githubusercontent.com/rainhitgrassed/mine/main/Source')))()
-local Window = OrionLib:MakeWindow({Name = "Lightning.cc Trial", HidePremium = false, SaveConfig = true, ConfigFolder = "OrionTest"})
+local Window = OrionLib:MakeWindow({Name = "Shadow.cc Free", HidePremium = false, SaveConfig = true, ConfigFolder = "OrionTest"})
 
 local tab1 = Window:MakeTab({
 	Name = "Catching",
@@ -23,53 +23,6 @@ local tab3 = Window:MakeTab({
 local sec1 = tab1:AddSection({
 	Name = "Catching Settings"
 })
-
-local function GetClosestFootball()
-	local player = game.Players.LocalPlayer
-	local character = player.Character
-	local closestFootball = nil
-	local shortestDistance = math.huge
-	
-	for _, part in ipairs(workspace:GetChildren()) do
-		if part:IsA("Part") and part.Name == "Football" then
-			local distance = (character.HumanoidRootPart.Position - part.Position).magnitude
-			if distance < shortestDistance then
-				shortestDistance = distance
-				closestFootball = part
-			end
-		end
-	end
-	
-	return closestFootball
-end
-
-local hitbox = Instance.new("Part")
-hitbox.Size = Vector3.new(0, 0, 0)
-hitbox.Anchored = true
-hitbox.CanCollide = false
-hitbox.Transparency = 1 -- Fully transparent initially
-hitbox.Color = Color3.fromRGB(128, 128, 128) -- Gray color
-hitbox.Parent = workspace
-
-tab1:AddToggle({
-	Name = "Show Hitbox",
-	Default = false,
-	Callback = function(Value)
-		if Value then
-			hitbox.Transparency = 0.5 -- Semi-transparent when toggle is ON
-		else
-			hitbox.Transparency = 1 -- Fully transparent when toggle is OFF
-		end
-	end    
-})
-
-game:GetService("RunService").Stepped:Connect(function()
-	local closestFootball = GetClosestFootball()
-	if closestFootball then
-		hitbox.Position = closestFootball.Position
-	end
-end)
-
 
 local hitboxSize = 0 -- To change the football size
 local isMagnetActive = false -- To check if the magnet toggle is active
@@ -99,6 +52,25 @@ tab1:AddToggle({
     end    
 })
 
+local function GetClosestFootball()
+	local player = game.Players.LocalPlayer
+	local character = player.Character
+	local closestFootball = nil
+	local shortestDistance = math.huge
+	
+	for _, part in ipairs(workspace:GetChildren()) do
+		if part:IsA("Part") and part.Name == "Football" then
+			local distance = (character.HumanoidRootPart.Position - part.Position).magnitude
+			if distance < shortestDistance then
+				shortestDistance = distance
+				closestFootball = part
+			end
+		end
+	end
+	
+	return closestFootball
+end
+
 tab1:AddSlider({
     Name = "Magnet Radius",
     Min = 0,
@@ -120,9 +92,44 @@ tab1:AddSlider({
     end    
 })
 
+local hitbox = Instance.new("Part")
+hitbox.Size = Vector3.new(0, 0, 0)
+hitbox.Anchored = true
+hitbox.CanCollide = false
+hitbox.Transparency = 1 -- Fully transparent initially
+hitbox.Color = Color3.fromRGB(128, 128, 128) -- Gray color
+hitbox.Parent = workspace
+
+tab1:AddToggle({
+	Name = "Show Hitbox",
+	Default = false,
+	Callback = function(Value)
+		if Value then
+			hitbox.Transparency = 0.5 -- Semi-transparent when toggle is ON
+		else
+			hitbox.Transparency = 1 -- Fully transparent when toggle is OFF
+		end
+	end    
+})
+
+game:GetService("RunService").Stepped:Connect(function()
+	local closestFootball = GetClosestFootball()
+	if closestFootball then
+		hitbox.Position = closestFootball.Position
+	end
+end)
 
 local sec2 = tab2:AddSection({
 	Name = "Player Settings"
+})
+
+tab2:AddToggle({
+    Name = "Angle Enchantment",
+    Default = false,
+    Callback = function(Value)
+        angleEnchantmentEnabled = Value
+        print("Angle Enchantment:", Value)
+    end    
 })
 
 local walkSpeedValue = 20
@@ -184,15 +191,6 @@ local originalJumpPower = humanoid.JumpPower
 local temporaryJumpPower = 55
 local resetDelay = 0.1 -- Time in seconds before resetting the jump power
 local angleEnchantmentEnabled = false
-
-tab2:AddToggle({
-    Name = "Angle Enchantment",
-    Default = false,
-    Callback = function(Value)
-        angleEnchantmentEnabled = Value
-        print("Angle Enchantment:", Value)
-    end    
-})
 
 tab2:AddSlider({
     Name = "Angle JP",
