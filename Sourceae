@@ -767,10 +767,6 @@ function OrionLib:MakeWindow(WindowConfig)
 			Container.CanvasSize = UDim2.new(0, 0, 0, Container.UIListLayout.AbsoluteContentSize.Y + 30)
 		end)
 
-		local UICorner5 = instance.new("UICorner")
-		UICorner5.CornerRadius = 0.5
-		UICorner.Parent = FirstTab
-
 		if FirstTab then
 			FirstTab = false
 			TabFrame.BackgroundColor3 = Color3.fromRGB(109, 22, 197)
