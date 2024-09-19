@@ -771,7 +771,7 @@ function OrionLib:MakeWindow(WindowConfig)
 			FirstTab = false
 			TabFrame.BackgroundColor3 = Color3.fromRGB(109, 22, 197)
 			TabFrame.Ico.ImageTransparency = 0
-			TabFrame.BackgroundTransparency = 0.5
+			TabFrame.BackgroundTransparency = 1
 			TabFrame.Title.TextTransparency = 0
 			TabFrame.Title.Font = Enum.Font.GothamBlack
 			Container.Visible = true
