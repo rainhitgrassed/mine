@@ -13,6 +13,13 @@ local tab2 = Window:MakeTab({
 	PremiumOnly = false
 })
 
+local tab3 = Window:MakeTab({
+	Name = "Visual",
+	Icon = "rbxassetid://4483362458",
+	PremiumOnly = false
+})
+
+
 local sec1 = tab1:AddSection({
 	Name = "Catching Settings"
 })
@@ -214,3 +221,115 @@ local function onKeyPress(input, gameProcessedEvent)
 end
 
 UserInputService.InputBegan:Connect(onKeyPress)
+
+local sec3 = tab3:AddSection({
+	Name = "Visual Settings"
+})
+
+local grav = 28
+local beamColor = Color3.fromRGB(255, 255, 255) -- Default beam color (white)
+local ballPredictionEnabled = false
+
+-- Ball position prediction function
+local function BallPosAtTime(initial_position, initial_velocity, gravity, t)
+    local predicted_position = initial_position + initial_velocity * t + 0.5 * Vector3.new(0, -gravity, 0) * t ^ 2
+    return predicted_position
+end
+
+-- Create parts and beam function
+local function createPartsAndBeam(x0, v0, airtime)
+    local parts = {}
+    local attachments = {}
+    local lastAttachment = nil
+
+    for t = 0, airtime, 0.05 do
+        local POS = BallPosAtTime(x0, v0, grav, t)
+        local Part = Instance.new("Part")
+        Part.Parent = workspace
+        Part.Size = Vector3.new(3, 2, 3)
+        Part.Anchored = true
+        Part.Color = Color3.fromRGB(0, 147, 70) -- Green color for the parts
+        Part.CanCollide = false
+        Part.Position = POS
+        Part.Rotation = Vector3.new(-90, 0, 90)
+        Part.Transparency = 1 -- Make the part completely invisible
+        table.insert(parts, Part)
+
+        local attachment = Instance.new("Attachment", Part)
+        table.insert(attachments, attachment)
+
+        if lastAttachment then
+            local beam = Instance.new("Beam")
+            beam.Parent = Part
+            beam.Color = ColorSequence.new(beamColor) -- Use selected beam color
+            beam.Texture = "rbxassetid://18231379988"
+            beam.Attachment0 = lastAttachment
+            beam.Attachment1 = attachment
+            beam.Width0 = 1.5
+            beam.Width1 = 1.5
+            beam.Transparency = NumberSequence.new(1 - (t / 0.5)) -- Gradually make beam visible
+        end
+
+        lastAttachment = attachment
+    end
+    return parts
+end
+
+-- Function to start the prediction when Ball Prediction is enabled
+local function startBallPrediction()
+    workspace.ChildAdded:Connect(function(c)
+        game:GetService("RunService").Stepped:Wait()
+        if c.Name ~= "Football" or c:IsA("Tool") then return end
+
+        local x0 = c.Position
+        local v0 = c.Velocity
+
+        local airtime = (-v0.Y - math.sqrt(v0.Y ^ 2 - 4 * 0.5 * -grav * x0.Y)) / (2 * 0.5 * -grav)
+
+        local parts = createPartsAndBeam(x0, v0, airtime)
+
+        task.wait(airtime + 1.75)
+
+        for _, Part in ipairs(parts) do
+            Part:Destroy()
+        end
+    end)
+end
+
+-- Toggle for Ball Prediction
+tab3:AddToggle({
+	Name = "Ball Prediction",
+	Default = false,
+	Callback = function(Value)
+		ballPredictionEnabled = Value
+		if ballPredictionEnabled then
+			print("Ball Prediction Enabled")
+			startBallPrediction()
+		else
+			print("Ball Prediction Disabled")
+		end
+	end    
+})
+
+-- Dropdown for Beam Color
+tab3:AddDropdown({
+	Name = "Beam Color",
+	Default = "White",
+	Options = {"White", "Red", "Green", "Orange", "Yellow", "Blue"},
+	Callback = function(Value)
+		if Value == "White" then
+			beamColor = Color3.fromRGB(255, 255, 255)
+		elseif Value == "Red" then
+			beamColor = Color3.fromRGB(255, 0, 0)
+		elseif Value == "Green" then
+			beamColor = Color3.fromRGB(100, 255, 85)
+		elseif Value == "Orange" then
+			beamColor = Color3.fromRGB(195, 103, 56)
+		elseif Value == "Yellow" then
+			beamColor = Color3.fromRGB(255, 255, 0)
+		elseif Value == "Blue" then
+			beamColor = Color3.fromRGB(2, 167, 248)
+		end
+		print("Beam Color changed to:", Value)
+	end    
+})
