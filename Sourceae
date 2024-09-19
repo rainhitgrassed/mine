@@ -1033,11 +1033,11 @@ function OrionLib:MakeWindow(WindowConfig)
 						Color = SliderConfig.Color
 					}),
 					AddThemeObject(SetProps(MakeElement("Label", "value", 13), {
-						Size = UDim2.new(1, -12, 0, 14),
+						Size = UDim2.new(0, 325, 0,-25),
 						Position = UDim2.new(0, 12, 0, 6),
 						Font = Enum.Font.GothamBold,
 						Name = "Value",
-						TextTransparency = 0.8
+						TextTransparency = 0
 					}), "Text"),
 					SliderDrag
 				})
