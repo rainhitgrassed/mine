@@ -1,0 +1,35 @@
+local player = game.Players.LocalPlayer
+local character = player.Character or player.CharacterAdded:Wait()
+local football = workspace:WaitForChild("Football") -- Change this to the actual name of the football object
+local AkaliNotif = loadstring(game:HttpGet("https://raw.githubusercontent.com/Kinlei/Dynissimo/main/Scripts/AkaliNotif.lua"))()
+local Notify = AkaliNotif.Notify
+
+function checkFootballDistance()
+    while true do
+        wait(1) -- Check every second
+
+        -- Check if the player has the football
+        if character:FindFirstChild("Football") then
+            local distance = (character.HumanoidRootPart.Position - football.Position).magnitude
+            local messageEnd
+
+            if distance >= 0 and distance <= 180 then
+                messageEnd = "Not Obvious"
+            elseif distance >= 180 and distance <= 225 then
+                messageEnd = "Balant Obvious"
+            elseif distance > 225 and distance <= 325 then
+                messageEnd = "Legit Obvious"
+            else
+                messageEnd = ""
+            end
+            
+            Notify({
+                Description = "Catught the football from: " .. math.floor(distance) .. " studs. " .. messageEnd,
+                Title = "Shadow.cc | OBV Checker",
+                Duration = 3
+            })
+        end
+    end
+end
+
+checkFootballDistance()
