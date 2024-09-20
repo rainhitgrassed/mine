@@ -1,0 +1,16 @@
+local AkaliNotif = loadstring(game:HttpGet("https://raw.githubusercontent.com/Kinlei/Dynissimo/main/Scripts/AkaliNotif.lua"))();
+local Notify = AkaliNotif.Notify;
+
+Notify({
+Description = "Bypassing...";
+Title = "Shadow.cc | Loading...";
+Duration = 5;
+});
+
+wait(3)
+
+Notify({
+Description = "Has been Bypassed!";
+Title = "Shadow.cc | Has been Loaded!";
+Duration = 5;
+});
