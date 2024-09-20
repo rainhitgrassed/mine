@@ -17,6 +17,7 @@ Container.Parent = NotifGui;
 
 local UIStroke = Instance.new("UIStroke")
 UIStroke.Color = Color3.fromRGB(109, 22, 197)
+UIStroke.Thickness = 1.5
 UIStroke.Parent = NotifGui
 
 local function Image(ID, Button)
